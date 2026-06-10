@@ -1,0 +1,18 @@
+flowchart TD
+    subgraph build["Build Phase (run once)"]
+        A["📄 Document Ingestion\nrequests + BeautifulSoup — Cornell URLs\nmanual .txt files — Reddit / ApartmentRatings"]
+        B["✂️ Chunking\nchunk_text()\n400-char chunks · 80-char overlap"]
+        C["🔢 Embedding\nall-MiniLM-L6-v2\n(sentence-transformers)"]
+        D["🗄️ Vector Store\nChromaDB (local)"]
+        A --> B --> C --> D
+    end
+
+    subgraph query["Query Phase (per request)"]
+        E["🔍 Retrieval\nChromaDB cosine similarity\ntop-k = 5 chunks"]
+        F["✨ Generation\nClaude claude-sonnet-4-6\n(Anthropic API)"]
+        E --> F
+    end
+
+    Q[/"👤 User Query"/] --> E
+    D -->|"stored vectors"| E
+    F --> R[/"💬 Answer"/]
