@@ -20,19 +20,22 @@
 <!-- List your specific sources: URLs, subreddit names, forum threads, or file descriptions.
      Aim for at least 10 sources that together cover different subtopics or perspectives within your domain. -->
 
-## Documents
+<!-- Ingestion status: ✅ = fetched by ingest.py | ⚠️ = 404/dead | 📋 = manually saved to documents/clean/ -->
 
-## Documents
-1. Cornell Ithaca Neighborhoods Guide — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process/ithaca-neighborhoods
-2. Cornell Housing Search Process — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process
-3. Cornell Signing the Lease Guide — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process/signing-lease
-4. Cornell Rental Listings & Resources — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process/rental-listings-resources
-5. Cornell Grad Tips: Renting & Tenant Rights — https://www.gradschool.cornell.edu/announcements/grad-tips-renting/
-6. ApartmentRatings — Cayuga Apartments reviews (manual copy) — https://www.apartmentratings.com/ny/ithaca/cayuga-apartments_607273165414850/
-7. ApartmentRatings — Ithaca general reviews (manual copy) — https://www.apartmentratings.com/ny/ithaca/
-8. r/CornellHousing — Off-campus housing thread (manual save) — https://www.reddit.com/r/CornellHousing/
-9. r/Ithaca — Ithaca housing experiences (manual save) — https://www.reddit.com/r/Ithaca/
-10. Cornell Off-Campus Living overview — https://scl.cornell.edu/residential-life/housing/campus-living
+1.  ✅ Cornell Ithaca Neighborhoods Guide — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process/ithaca-neighborhoods
+2.  ⚠️ Cornell Housing Search Process — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process (404 — page removed; covered by sub-pages below)
+3.  ✅ Cornell Signing the Lease Guide — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process/signing-lease
+4.  ✅ Cornell Rental Listings & Resources — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process/rental-listings-resources
+5.  ✅ Cornell Grad Tips: Renting & Tenant Rights — https://www.gradschool.cornell.edu/announcements/grad-tips-renting/
+6.  ✅ Cornell Safe Living Environments — https://scl.cornell.edu/residential-life/housing/campus-living/housing-search-process/safe-living-environments
+7.  ✅ Cornell Off-Campus Living News Article — https://scl.cornell.edu/news-events/news/supporting-journey-campus-living-cornells-comprehensive-housing-resources
+8.  ✅ Cornell Off-Campus Living overview — https://scl.cornell.edu/residential-life/housing/campus-living
+9.  📋 r/Cornell — Housing Situation at Cornell (Auden Ithaca) → documents/clean/auden.txt
+10. 📋 r/ithaca — Moving to Titus Towers → documents/clean/titus_towers.txt
+11. 📋 r/Cornell — Housing: northeast Ithaca vs downtown? → documents/clean/north_vs_downtown.txt
+12. 📋 r/Cornell — Where to live in Ithaca? → documents/clean/where_to_live.txt
+
+**Current ingestion stats:** 11 documents (8 auto-fetched, 4 manual), 109 chunks
 
 ---
 
@@ -161,7 +164,7 @@ Vector store: ChromaDB (local).
    for inspection.
 
 3. Embedding and vector store setup
-   Tool: Claude
+   Tool: Groq
    Input: My Retrieval Approach section (all-MiniLM-L6-v2, ChromaDB, k=5) 
    and my pipeline diagram.
    Expected output: A script that embeds all chunks using sentence-transformers, 
