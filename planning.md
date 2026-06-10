@@ -151,4 +151,4 @@ Vector store: ChromaDB (local).
 
 **Milestone 4 — Embedding and retrieval:** ✅ embed.py — 106 chunks embedded with all-MiniLM-L6-v2, stored in ChromaDB. Retrieval tested with 3 evaluation queries; top-result distances: 0.20 (Collegetown), 0.37 (lease questions), 0.30 (grad neighborhoods). All top results on-topic and below 0.5 threshold.
 
-**Milestone 5 — Generation and interface:**
+**Milestone 5 — Generation and interface:** ✅ query.py — Groq llama-3.3-70b-versatile with strict grounding system prompt; programmatic source attribution; tested 4 queries including 1 out-of-scope (correctly declined). app.py — Gradio UI at localhost:7860 with example questions and side-by-side answer/sources layout.
