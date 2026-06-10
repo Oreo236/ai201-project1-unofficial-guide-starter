@@ -9,7 +9,7 @@ flowchart TD
 
     subgraph query["Query Phase (per request)"]
         E["🔍 Retrieval\nChromaDB cosine similarity\ntop-k = 5 chunks"]
-        F["✨ Generation\nClaude claude-sonnet-4-6\n(Anthropic API)"]
+        F["✨ Generation\nGroq API (llama-3.3-70b)\nGroq SDK"]
         E --> F
     end
 

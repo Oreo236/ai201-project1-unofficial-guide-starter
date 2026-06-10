@@ -35,7 +35,7 @@
 11. 📋 r/Cornell — Housing: northeast Ithaca vs downtown? → documents/clean/north_vs_downtown.txt
 12. 📋 r/Cornell — Where to live in Ithaca? → documents/clean/where_to_live.txt
 
-**Current ingestion stats:** 11 documents (8 auto-fetched, 4 manual), 109 chunks
+**Current ingestion stats:** 11 documents (8 auto-fetched, 4 manual), 106 chunks, 106 vectors in ChromaDB
 
 ---
 
@@ -81,24 +81,21 @@ Vector store: ChromaDB (local).
      Questions should be specific enough that you can judge whether the system's response
      is right or wrong. "What are good dining halls?" is too vague.
      "What do students say about wait times at [dining hall name] during lunch?" is testable. -->
-1. Question: What are the characteristics of the Collegetown neighborhood 
-   for Cornell students?
-   Expected answer: Collegetown is close to campus (0.1–0.5 mile walk), popular with undergraduates, has high rent, noise, and congestion, features shopping and restaurants, and requires an uphill walk to campus from lower Collegetown.
 
-2. Question: What should Cornell students ask a landlord before signing a lease?
-   Expected answer: Students should ask about repair responsibilities, preferred contact method for emergencies, how long previous tenants stayed, why they left and how the security deposit was returned.
+1. Question: What do students say about living at Auden Ithaca apartments?
+   Expected answer: Students report mixed experiences. Staff can be responsive but email is unreliable — calling or walking in works better. Laundry machines broke down for 1-2 months. Parking is $40/month with plenty of spots. Rooms are small but manageable at ~$750/month. Shuttle service exists but is inconsistent. One reviewer gave it 7/10.
 
-3. Question: What do student reviewers say about the management at 
-   Cayuga Apartments?
-   Expected answer: At least one reviewer describes Cayuga Apartments as "a wonderful community," while at least one other reviewer explicitly describes the management company as rude and unresponsive and states they were charged additional rent after moving out.
+2. Question: What are the pros and cons of living in Collegetown vs downtown Ithaca for Cornell students?
+   Expected answer: Collegetown has the best bus connectivity and is walkable to campus but is expensive and primarily undergrad-oriented.Downtown connects through all buses via Seneca and Green St, runs late into the night, and is preferred by grad students who want more independence. Collegetown Terrace offers a free shuttle, gym, and walk-in closets at ~$1,090/month.
 
-4. Question: What neighborhoods are recommended for Cornell graduate 
-   students looking for lower rent?
-   Expected answer: Downtown Ithaca and Fall Creek are noted for lower rents and a city neighborhood feel, with frequent bus service making the uphill commute to campus manageable.
+3. Question: What should Cornell students ask a landlord before signing a lease?
+   Expected answer: Students should ask about repair responsibilities, preferred contact method for emergencies, how long previous tenants stayed, why they left, and how the security deposit was returned. Cornell also recommends checking public records for municipal code compliance and reading the entire lease before signing.
 
-5. Question: What resources does Cornell offer students who have problems 
-   with their landlord?
-   Expected answer: Cornell Off-Campus Living helps with all landlord issues regardless of size, connects students to the right resources, and covers problems ranging from mold and insects to lease disputes and security deposit conflicts.
+4. Question: What resources does Cornell offer students who have problems with their landlord?
+   Expected answer: Cornell Off-Campus Living helps with all landlord issues regardless of size. For unresolved disputes students can contact the City of Ithaca Building Department, the Community Dispute Resolution Center, or file a complaint with the NYS Attorney General's office. The NYS Tenants Rights Guide is also available online and in the Off-Campus Living office.
+
+5. Question: What neighborhoods are recommended for Cornell graduate students without a car?
+   Expected answer: Downtown Ithaca is recommended for grad students — buses run late via Seneca and Green St and it offers independence from the undergrad Collegetown scene. University Park and Gaslight Village near Triphammer Mall are also suggested — flat bike ride to the Lab of Ornithology and one bus to campus. Fall Creek is loved but requires a car or long walk to reach buses.
 
 ---
 
@@ -108,17 +105,8 @@ Vector store: ChromaDB (local).
      Consider: noisy or inconsistent documents, missing source attribution, off-topic
      retrieval, chunks that split key information across boundaries. -->
 
-1. Bot-blocked sources producing empty documents: ApartmentRatings blocks 
-   automated requests, meaning if the ingestion script tries to fetch those 
-   URLs directly it will get an error or empty HTML instead of review text. 
-   This will be mitigated by manually copying review text into .txt files 
-   before running the pipeline.
-2. Thin review coverage for specific apartments: The ApartmentRatings 
-   corpus for Ithaca is small — some buildings have only 3–5 reviews. 
-   Queries about specific apartments (e.g. "what do students say about 
-   Cayuga Apartments maintenance?") may return too few chunks to generate 
-   a grounded answer, forcing the system to either hallucinate or correctly 
-   decline to answer.
+1. Bot-blocked sources producing empty documents: ApartmentRatings blocks automated requests, meaning if the ingestion script tries to fetch those URLs directly it will get an error or empty HTML instead of review text. This will be mitigated by manually copying review text into .txt files before running the pipeline.
+2. Thin review coverage for specific apartments: The ApartmentRatings corpus for Ithaca is small — some buildings have only 3–5 reviews. Queries about specific apartments (e.g. "what do students say about Cayuga Apartments maintenance?") may return too few chunks to generate a grounded answer, forcing the system to either hallucinate or correctly decline to answer.
 
 ---
 
@@ -146,33 +134,21 @@ Vector store: ChromaDB (local).
      with my specified chunk size and overlap" is a plan. -->
 1. Document ingestion and cleaning script
    Tool: Claude
-   Input: My Documents section (list of 10 sources with URLs and collection 
-   methods), Milestone 3 requirements from the assignment, and a note that 
-   ApartmentRatings and Reddit sources are pre-saved .txt files while Cornell 
-   sources should be fetched via requests + BeautifulSoup.
-   Expected output: A Python script that loads .txt files from a local 
-   directory and fetches the 6 Cornell URLs, strips HTML navigation/boilerplate, 
-   and outputs clean text strings ready for chunking.
+   Input: My Documents section (list of 10 sources with URLs and collection methods), Milestone 3 requirements from the assignment, and a note that ApartmentRatings and Reddit sources are pre-saved .txt files while Cornell sources should be fetched via requests + BeautifulSoup.
+   Expected output: A Python script that loads .txt files from a local directory and fetches the 6 Cornell URLs, strips HTML navigation/boilerplate, and outputs clean text strings ready for chunking.
 
 2. Chunking script
    Tool: Claude
-   Input: My Chunking Strategy section (400-character chunks, 80-character 
-   overlap) and a sample cleaned document to test against.
-   Expected output: A chunk_text() function that splits a string into 
-   overlapping chunks of the specified size and returns them as a list, 
-   plus a script that applies it to all documents and prints 5 sample chunks 
-   for inspection.
+   Input: My Chunking Strategy section (400-character chunks, 80-character overlap) and a sample cleaned document to test against.
+   Expected output: A chunk_text() function that splits a string into overlapping chunks of the specified size and returns them as a list, plus a script that applies it to all documents and prints 5 sample chunks for inspection.
 
 3. Embedding and vector store setup
    Tool: Groq
-   Input: My Retrieval Approach section (all-MiniLM-L6-v2, ChromaDB, k=5) 
-   and my pipeline diagram.
-   Expected output: A script that embeds all chunks using sentence-transformers, 
-   stores them in ChromaDB with source metadata (filename, chunk index), and 
-   exposes a retrieve(query, k=5) function returning chunks and source names.
+   Input: My Retrieval Approach section (all-MiniLM-L6-v2, ChromaDB, k=5) and my pipeline diagram.
+   Expected output: A script that embeds all chunks using sentence-transformers, stores them in ChromaDB with source metadata (filename, chunk index), and exposes a retrieve(query, k=5) function returning chunks and source names.
 
 **Milestone 3 — Ingestion and chunking:**
 
-**Milestone 4 — Embedding and retrieval:**
+**Milestone 4 — Embedding and retrieval:** ✅ embed.py — 106 chunks embedded with all-MiniLM-L6-v2, stored in ChromaDB. Retrieval tested with 3 evaluation queries; top-result distances: 0.20 (Collegetown), 0.37 (lease questions), 0.30 (grad neighborhoods). All top results on-topic and below 0.5 threshold.
 
 **Milestone 5 — Generation and interface:**
